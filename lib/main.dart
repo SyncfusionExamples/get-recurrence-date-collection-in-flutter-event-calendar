@@ -14,15 +14,8 @@ class RecurrenceDateCollection extends StatefulWidget {
 }
 
 class RecurrenceDateCollectionState extends State<RecurrenceDateCollection> {
-  String _recurrenceRule;
-  DateTime _startTime;
-
-  @override
-  void initState() {
-    _startTime = DateTime.now();
-    _recurrenceRule = 'FREQ=DAILY;INTERVAL=2;UNTIL=20210810';
-    super.initState();
-  }
+  String? _recurrenceRule = 'FREQ=DAILY;INTERVAL=2;UNTIL=20210810';
+  DateTime? _startTime = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +31,9 @@ class RecurrenceDateCollectionState extends State<RecurrenceDateCollection> {
             ),
             Expanded(
                 child: SfCalendar(
-                  view: CalendarView.month,
-                  dataSource: _getCalendarDataSource(),
-                ))
+              view: CalendarView.month,
+              dataSource: _getCalendarDataSource(),
+            ))
           ],
         ),
       ),
@@ -49,11 +42,10 @@ class RecurrenceDateCollectionState extends State<RecurrenceDateCollection> {
 
   _showDialog() async {
     List<DateTime> _dateCollection =
-        SfCalendar.getRecurrenceDateTimeCollection(_recurrenceRule, _startTime);
+        SfCalendar.getRecurrenceDateTimeCollection(_recurrenceRule!, _startTime!);
     await showDialog(
-      context: context,
-      // ignore: deprecated_member_use
-      child: new AlertDialog(
+      builder: (context) => new
+      AlertDialog(
         contentPadding: const EdgeInsets.all(16.0),
         content: ListView.builder(
             itemCount: _dateCollection.length,
@@ -74,15 +66,15 @@ class RecurrenceDateCollectionState extends State<RecurrenceDateCollection> {
                 Navigator.pop(context);
               })
         ],
-      ),
+      ), context: context,
     );
   }
 
   _AppointmentDataSource _getCalendarDataSource() {
     List<Appointment> appointments = <Appointment>[];
     appointments.add(Appointment(
-        startTime: _startTime,
-        endTime: _startTime.add(Duration(hours: 1)),
+        startTime: _startTime!,
+        endTime: _startTime!.add(Duration(hours: 1)),
         subject: 'Meeting',
         color: Colors.blue,
         recurrenceRule: _recurrenceRule));
