@@ -3,30 +3,32 @@ import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 void main() {
-  runApp(new MaterialApp(
-      debugShowCheckedModeBanner: false, home: new RecurrenceDateCollection()));
+  runApp(const MaterialApp(
+      debugShowCheckedModeBanner: false, home: RecurrenceDateCollection()));
 }
 
 class RecurrenceDateCollection extends StatefulWidget {
+  const RecurrenceDateCollection({super.key});
+
   @override
   RecurrenceDateCollectionState createState() =>
-      new RecurrenceDateCollectionState();
+      RecurrenceDateCollectionState();
 }
 
 class RecurrenceDateCollectionState extends State<RecurrenceDateCollection> {
-  String? _recurrenceRule = 'FREQ=DAILY;INTERVAL=2;UNTIL=20210810';
-  DateTime? _startTime = DateTime.now();
+  final String? _recurrenceRule = 'FREQ=DAILY;INTERVAL=2;UNTIL=20240810';
+  final DateTime? _startTime = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
             Center(
-              child: new RaisedButton(
+              child: TextButton(
                 onPressed: _showDialog,
-                child: new Text("Get Recurrence date collections"),
+                child: Text("Get Recurrence date collections"),
               ),
             ),
             Expanded(
@@ -41,32 +43,36 @@ class RecurrenceDateCollectionState extends State<RecurrenceDateCollection> {
   }
 
   _showDialog() async {
-    List<DateTime> _dateCollection =
-        SfCalendar.getRecurrenceDateTimeCollection(_recurrenceRule!, _startTime!);
+    List<DateTime> dateCollection = SfCalendar.getRecurrenceDateTimeCollection(
+        _recurrenceRule!, _startTime!);
     await showDialog(
-      builder: (context) => new
-      AlertDialog(
+      builder: (context) => AlertDialog(
         contentPadding: const EdgeInsets.all(16.0),
-        content: ListView.builder(
-            itemCount: _dateCollection.length,
-            itemBuilder: (BuildContext context, int index) {
-              return new Text(DateFormat('dd, MMMM yyyy')
-                  .format(_dateCollection[index])
-                  .toString());
-            }),
+        content: Container(
+          width: 800,
+          height: 800,
+          child: ListView.builder(
+              itemCount: dateCollection.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Text(DateFormat('dd, MMMM yyyy')
+                    .format(dateCollection[index])
+                    .toString());
+              }),
+        ),
         actions: <Widget>[
-          new FlatButton(
+          TextButton(
               child: const Text('CANCEL'),
               onPressed: () {
                 Navigator.pop(context);
               }),
-          new FlatButton(
+          TextButton(
               child: const Text('OK'),
               onPressed: () {
                 Navigator.pop(context);
               })
         ],
-      ), context: context,
+      ),
+      context: context,
     );
   }
 
@@ -74,7 +80,7 @@ class RecurrenceDateCollectionState extends State<RecurrenceDateCollection> {
     List<Appointment> appointments = <Appointment>[];
     appointments.add(Appointment(
         startTime: _startTime!,
-        endTime: _startTime!.add(Duration(hours: 1)),
+        endTime: _startTime!.add(const Duration(hours: 1)),
         subject: 'Meeting',
         color: Colors.blue,
         recurrenceRule: _recurrenceRule));
